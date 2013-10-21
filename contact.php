@@ -1,7 +1,7 @@
 <?php
 	if($_POST["type"]=="input")
 	{
-		$connect = mysql_connect('rdbms.strato.de', 'U494234', 'Hoff3103');
+		$connect = mysql_connect('server', 'user', 'pw');
 		mysql_select_db("DB494234", $connect);
 		echo $_POST["content"];
 		$sql = "INSERT INTO messages VALUES ('" . $_POST["content"] . "')";
