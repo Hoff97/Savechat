@@ -1,0 +1,206 @@
+<html>
+	<head>
+		<title>Encryption</title>
+		<script type="text/javascript">
+			var keys = new Array();
+			var name = "Unknown User";
+			function test()
+			{	
+				name = prompt("Name?","");
+				updateContent({responseText:""});
+			}
+			
+			function addKey()
+			{
+				keys.push(prompt("Key",""));
+			}
+			function addMessage()
+			{
+				var key = prompt("Key","");
+				var message = prompt("Message","");
+				
+				message = new Message(name,message);
+				var sent = combineChars(JSON.stringify(message),key);
+				
+				sent = sent.replace(new RegExp("&", 'g'),"....AND....");
+				sent = sent.replace(new RegExp("[?]", 'g'),"....QUEST....");
+				sent = sent.replace(new RegExp("[']", 'g'),"....BRACKET....");
+				sent = sent.replace(new RegExp("[\"]", 'g'),"....BRACKETBIG....");
+				sent = sent.replace(new RegExp("[„]", 'g'),"....BRACKETBOTTOM....");
+				
+				alert(sent);
+				
+				var req = new AjaxRequest("contact.php",function(ms){alert(ms.responseText);},[new Parameter("type","input"),new Parameter("content",sent)]);
+				req.send();
+			}
+			
+			function updateContent(response)
+			{
+				var text = response.responseText.replace(new RegExp("....AND....", "g"),"&");
+				text = text.replace(new RegExp("....QUEST....", "g"),"?");
+				text = text.replace(new RegExp("....BRACKET....", "g"),"'");
+				text = text.replace(new RegExp("....BRACKETBIG....", "g"),"\"");
+				text = text.replace(new RegExp("....BRACKETBOTTOM....", "g"),"„");
+				var list = text.split("||||NEXT||||");
+				var chatcontent = "";
+				for(var a = 0; a<list.length; a++)
+				{
+					for(var b = 0; b<keys.length; b++)
+					{
+						var dec = "";
+						try
+						{
+							dec = JSON.parse(decombineChars(list[a], keys[b]));
+						}
+						catch(e)
+						{
+						}
+						if(dec.from)
+						{
+							chatcontent = dec.from + ":" + dec.content + "</br>" + chatcontent;
+						}
+					}
+				}
+				document.getElementById("messages").innerHTML = chatcontent;
+				
+				var req = new AjaxRequest("contact.php", updateContent, [new Parameter("type","output")]);
+				req.send();
+			}
+			
+			function Message(from, content)
+			{
+				this.from = from;
+				this.content = content;
+			}
+			
+			function generateKey(length)
+			{
+				var ret = "";
+				for(var a = 0; a<length; a++)
+				{
+					var rand = 32+Math.round(Math.random()*94);
+					ret += String.fromCharCode(rand);
+				}
+				return ret;
+			}		
+			function encrypt(sign, key)
+			{
+				var bet = sign.charCodeAt(0)+key.charCodeAt(0);
+				if(bet>126)
+				{
+					bet -= 95;
+				}
+				return String.fromCharCode(bet);
+			}
+			function decrypt(sign, key)
+			{
+				var bet = sign.charCodeAt(0)-key.charCodeAt(0);
+				if(bet<32)
+				{
+					bet += 95;
+				}
+				return String.fromCharCode(bet);
+			}
+			function combineChars(text, key)
+			{
+				var ret = "";
+				var b = 0;
+				for(var a = 0; a<text.length; a++)
+				{
+					ret += encrypt(text.charAt(a), key.charAt(b));
+					b++;
+					if(b+1>key.length)
+					{
+						b = 0;
+					}
+				}
+				return ret;
+			}
+			function decombineChars(text, key)
+			{
+				var ret = "";
+				var b = 0;
+				for(var a = 0; a<text.length; a++)
+				{
+					ret += decrypt(text.charAt(a), key.charAt(b));
+					b++;
+					if(b+1>key.length)
+					{
+						b = 0;
+					}
+				}
+				return ret;
+			}
+			
+			
+			function AjaxRequest(_file, _readyFunction, _parameters) //A Ajax request wich sends parameter with POST
+			{
+				var file = _file;
+				var readyFunction = _readyFunction;
+				var parameters = _parameters;
+				
+				this.send = function()
+				{
+					var xmlhttp;
+					if (window.XMLHttpRequest)
+					{
+						xmlhttp=new XMLHttpRequest();
+					}
+					else
+					{
+						xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+					}
+					
+					xmlhttp.onreadystatechange=function()
+					{
+						if (xmlhttp.readyState==4 && xmlhttp.status==200)
+						{
+							readyFunction(xmlhttp);
+						}
+						else if(xmlhttp.status==404)
+						{
+							alert("Request failed. Page not found\nStopped at readyState: " + xmlhttp.readyState);
+						}
+					}
+					xmlhttp.open("POST",file,true);
+					xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+					
+					var sendparams = "";
+					for(var a = 0; a<parameters.length; a++)
+					{
+						if(a>0)
+						{
+							sendparams += "&";
+						}
+						sendparams += parameters[a].name + "=" + parameters[a].value;
+					}
+					
+					xmlhttp.send(sendparams);
+				}
+			}
+			
+			function Parameter(_name, _value)
+			{
+				this.name = _name;
+				this.value = _value;
+			}
+		</script>
+		
+		<style type="text/css">
+			#messages
+			{
+				position:absolute;
+				top:5%;
+				left:10%;
+				border:1px solid #000;
+				width: 70%;
+				height:90%;
+			}
+		</style>		
+	</head>
+	<body onload="test()">
+		<div id="addKey" onclick="addKey()">Key hinzuf&uuml;gen</div>
+		<div id="addMessage" onclick="addMessage()">Nachricht</div>
+		<div id="messages"></div>
+	</body>
+</html>
