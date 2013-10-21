@@ -1,4 +1,4 @@
 Savechat
 ========
 
-A chat wich is encrypted on client side.
+A chat wich gets encrypted and decrypted on client side.
