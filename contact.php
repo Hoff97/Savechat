@@ -9,7 +9,7 @@
 	}
 	else if($_POST["type"]=="output")
 	{
-		$connect = mysql_connect('rdbms.strato.de', 'U494234', 'Hoff3103');
+		$connect = mysql_connect('Server', 'User', 'PW');
 		mysql_select_db("DB494234", $connect);
 		$query = "SELECT * FROM messages";
 		$result = mysql_query($query,$connect);
