@@ -25,27 +25,15 @@
 				var message = prompt("Message","");
 				
 				message = new Message(name,message);
-				var sent = combineChars(JSON.stringify(message),key);
+				var sent = sjcl.encrypt(key, JSON.stringify(message));
 				
-				sent = sent.replace(new RegExp("&", 'g'),"....AND....");
-				sent = sent.replace(new RegExp("[?]", 'g'),"....QUEST....");
-				sent = sent.replace(new RegExp("[']", 'g'),"....BRACKET....");
-				sent = sent.replace(new RegExp("[\"]", 'g'),"....BRACKETBIG....");
-				sent = sent.replace(new RegExp("[„]", 'g'),"....BRACKETBOTTOM....");
-				
-				alert(sent);
-				
-				var req = new AjaxRequest("contact.php",function(ms){alert(ms.responseText);},[new Parameter("type","input"),new Parameter("content",sent)]);
+				var req = new AjaxRequest("contact.php",function(ms){},[new Parameter("type","input"),new Parameter("content",sent)]);
 				req.send();
 			}
 			
 			function updateContent(response)
 			{
-				var text = response.responseText.replace(new RegExp("....AND....", "g"),"&");
-				text = text.replace(new RegExp("....QUEST....", "g"),"?");
-				text = text.replace(new RegExp("....BRACKET....", "g"),"'");
-				text = text.replace(new RegExp("....BRACKETBIG....", "g"),"\"");
-				text = text.replace(new RegExp("....BRACKETBOTTOM....", "g"),"„");
+				var text = response.responseText;
 				var list = text.split("||||NEXT||||");
 				var chatcontent = "";
 				for(var a = 0; a<list.length; a++)
@@ -55,7 +43,8 @@
 						var dec = "";
 						try
 						{
-							dec = JSON.parse(decombineChars(list[a], keys[b]));
+							sjcl.decrypt(keys[b], list[a]);
+							dec = JSON.parse(sjcl.decrypt(keys[b], list[a]));
 						}
 						catch(e)
 						{
@@ -87,54 +76,14 @@
 					ret += String.fromCharCode(rand);
 				}
 				return ret;
-			}		
-			function encrypt(sign, key)
-			{
-				var bet = sign.charCodeAt(0)+key.charCodeAt(0);
-				if(bet>126)
-				{
-					bet -= 95;
-				}
-				return String.fromCharCode(bet);
-			}
-			function decrypt(sign, key)
-			{
-				var bet = sign.charCodeAt(0)-key.charCodeAt(0);
-				if(bet<32)
-				{
-					bet += 95;
-				}
-				return String.fromCharCode(bet);
 			}
 			function combineChars(text, key)
 			{
-				var ret = "";
-				var b = 0;
-				for(var a = 0; a<text.length; a++)
-				{
-					ret += encrypt(text.charAt(a), key.charAt(b));
-					b++;
-					if(b+1>key.length)
-					{
-						b = 0;
-					}
-				}
-				return ret;
+				sjcl.encrypt(key, text);
 			}
 			function decombineChars(text, key)
 			{
-				var ret = "";
-				var b = 0;
-				for(var a = 0; a<text.length; a++)
-				{
-					ret += decrypt(text.charAt(a), key.charAt(b));
-					b++;
-					if(b+1>key.length)
-					{
-						b = 0;
-					}
-				}
-				return ret;
+				sjcl.decrypt(key, text);
 			}
 			
 			
@@ -190,6 +139,12 @@
 				this.value = _value;
 			}
 		</script>
+<<<<<<< HEAD
+=======
+		
+		<script type="text/javascript" src="sjcl.js"></script>
+		
+>>>>>>> origin/develop
 		<style type="text/css">
 			#messages
 			{
