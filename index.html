@@ -12,7 +12,8 @@
 			function test()
 			{	
 				name = prompt("Name?","");
-				updateContent({responseText:""});
+				var req = new AjaxRequest("contact.php", updateContent, [new Parameter("type","output")]);
+				req.send();
 			}
 			
 			function addKey()
@@ -26,6 +27,9 @@
 				
 				message = new Message(name,message);
 				var sent = sjcl.encrypt(key, JSON.stringify(message));
+				alert(sent);
+				sent = sent.replace(new RegExp("\\+","g"),"....PLUS....");
+				alert(sent);
 				
 				var req = new AjaxRequest("contact.php",function(ms){},[new Parameter("type","input"),new Parameter("content",sent)]);
 				req.send();
@@ -34,6 +38,7 @@
 			function updateContent(response)
 			{
 				var text = response.responseText;
+				text = text.replace(new RegExp("....PLUS....","g"),"+");
 				var list = text.split("||||NEXT||||");
 				var chatcontent = "";
 				for(var a = 0; a<list.length; a++)
@@ -43,7 +48,6 @@
 						var dec = "";
 						try
 						{
-							sjcl.decrypt(keys[b], list[a]);
 							dec = JSON.parse(sjcl.decrypt(keys[b], list[a]));
 						}
 						catch(e)
@@ -139,12 +143,8 @@
 				this.value = _value;
 			}
 		</script>
-<<<<<<< HEAD
-=======
 		
 		<script type="text/javascript" src="sjcl.js"></script>
-		
->>>>>>> origin/develop
 		<style type="text/css">
 			#messages
 			{

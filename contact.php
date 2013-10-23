@@ -1,15 +1,19 @@
 <?php
 	if($_POST["type"]=="input")
 	{
-		$connect = mysql_connect('localhost', 'root', 'Jan2008');
-		mysql_select_db("savechat", $connect);
-		echo $_POST["content"];
-		$sql = "INSERT INTO messages VALUES ('" . $_POST["content"] . "')";
-		mysql_query($sql,$connect);
+		$content = file_get_contents("data.txt");
+		if($content!="")
+		{
+			file_put_contents("data.txt", $content."||||NEXT||||".$_POST["content"]);
+		}
+		else
+		{
+			file_put_contents("data.txt", $_POST["content"]);
+		}
 	}
 	else if($_POST["type"]=="output")
 	{
-		$connect = mysql_connect('localhost', 'root', 'Jan2008');
+		/*$connect = mysql_connect('localhost', 'root', 'Jan2008');
 		mysql_select_db("savechat", $connect);
 		$query = "SELECT * FROM messages";
 		$result = mysql_query($query,$connect);
@@ -23,6 +27,7 @@
 			}
 			echo $row["content"];
 			$a++;
-		}
+		}*/
+		echo file_get_contents("data.txt");
 	}
 ?>
