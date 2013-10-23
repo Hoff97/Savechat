@@ -1,6 +1,11 @@
 <html>
 	<head>
-		<title>Encryption</title>
+		<title>Savechat Beta</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link rel="icon" type="image/icon" href="pics/favicon.ico" />
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 			var keys = new Array();
 			var name = "Unknown User";
@@ -57,7 +62,7 @@
 						}
 						if(dec.from)
 						{
-							chatcontent = dec.from + ":" + dec.content + "</br>" + chatcontent;
+							chatcontent = dec.from + ": " + dec.content + "<br /><br />" + chatcontent;
 						}
 					}
 				}
@@ -185,22 +190,43 @@
 				this.value = _value;
 			}
 		</script>
-		
 		<style type="text/css">
 			#messages
 			{
 				position:absolute;
-				top:5%;
-				left:10%;
-				border:1px solid #000;
+				top: 5%;
+				left: 10%;
+				border: 1px solid #000;
 				width: 70%;
-				height:90%;
+				height: 90%;
 			}
-		</style>		
+			#option_chat
+			{
+				position:absolute;
+				top: 5%;
+				left: 0.5%;
+				width: 9%;
+				height: 20%;
+			}
+			#option_buttons
+			{
+				position:absolute;
+				left: 2%;
+			}
+			#background
+			{
+				background-color: #BDBDBD;
+			}
+		</style>
 	</head>
-	<body onload="test()">
-		<div id="addKey" onclick="addKey()">Key hinzuf&uuml;gen</div>
-		<div id="addMessage" onclick="addMessage()">Nachricht</div>
+	<body onload="test()" id="background">
+		<noscript>
+			<div class="alert alert-error">Please enable JavaScript to use Savechat.</div>
+		</noscript>
+		<div id="option_chat">
+				<button class="btn btn-large btn-primary" id="addKey" onclick="addKey()" type="button"><i class="icon-plus"></i> Add Key&nbsp;</button><br /><br />
+				<button class="btn btn-large btn-primary" id="addMessage" onclick="addMessage()" type="button"><i class="icon-pencil"></i> Message</button><br />
+		</div>
 		<div id="messages"></div>
 	</body>
 </html>
