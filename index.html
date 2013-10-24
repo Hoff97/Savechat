@@ -10,9 +10,13 @@
 			var keys = new Array("Testkey");
 			var name = "Unknown User";
 			var curkey = keys[0];
+			var sound;
+			var message = false;
 			function test()
 			{	
 				name = prompt("Name?","");
+				
+				sound = new Audio("sound.mp3");
 				
 				updateSelection();
 				
@@ -66,6 +70,7 @@
 				text = text.replace(new RegExp("....PLUS....","g"),"+");
 				var list = text.split("||||NEXT||||");
 				var chatcontent = "";
+				var latest;
 				for(var a = 0; a<list.length; a++)
 				{
 					var dec = "";
@@ -78,11 +83,17 @@
 					}
 					if(dec.from)
 					{
+						latest = dec.from;
 						chatcontent = dec.from + ": " + dec.content + "<br /><br />" + chatcontent;
 					}
 				}
+				var oldcontent = document.getElementById("messages").innerHTML;
 				document.getElementById("messages").innerHTML = chatcontent;
-				
+				if(document.getElementById("messages").innerHTML!=oldcontent && latest!=name)
+				{
+					sound.play();
+				}
+				message = true;
 				var req = new AjaxRequest("contact.php", updateContent, [new Parameter("type","output")]);
 				req.send();
 			}
