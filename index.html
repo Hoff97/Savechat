@@ -27,9 +27,7 @@
 				
 				message = new Message(name,message);
 				var sent = sjcl.encrypt(key, JSON.stringify(message));
-				alert(sent);
 				sent = sent.replace(new RegExp("\\+","g"),"....PLUS....");
-				alert(sent);
 				
 				var req = new AjaxRequest("contact.php",function(ms){},[new Parameter("type","input"),new Parameter("content",sent)]);
 				req.send();
@@ -180,8 +178,19 @@
 		</noscript>
 		<div id="option_chat">
 				<button class="btn btn-primary" id="addKey" onclick="addKey()" type="button"><i class="icon-plus"></i> Add Key&nbsp;</button><br /><br />
-				<button class="btn btn-primary" id="addMessage" onclick="addMessage()" type="button"><i class="icon-pencil"></i> Message</button><br />
+				 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					Select Key
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<!-- dropdown menu links -->
+				</ul>
 		</div>
 		<div id="messages"></div>
+		<div id="input">
+			<form name="input" action="javascript:addMessage()">
+				<input type="input"/>
+			</form>
+		</div>
 	</body>
 </html>
