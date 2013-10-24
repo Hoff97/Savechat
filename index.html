@@ -173,9 +173,10 @@
 				position:absolute;
 				top: 5%;
 				left: 10%;
-				border: 1px solid #000;
+				border: 3px double #000;
 				width: 70%;
 				height: 90%;
+				background-color: #BDBDBD;
 			}
 			#option_chat
 			{
@@ -190,9 +191,9 @@
 				position:absolute;
 				left: 2%;
 			}
-			#background
+			body
 			{
-				background-color: #BDBDBD;
+				background-color: #000;
 			}
 			#input
 			{
@@ -202,7 +203,7 @@
 			}
 		</style>
 	</head>
-	<body onload="test()" id="background">
+	<body onload="test()">
 		<noscript>
 			<div class="alert alert-error">Please enable JavaScript to use Savechat.</div>
 		</noscript>
@@ -210,7 +211,7 @@
 			<button class="btn btn-primary" id="addKey" onclick="addKey()" type="button"><i class="icon-plus"></i> Add Key&nbsp;</button><br /><br />
 			<div class="btn-group">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					Select Key
+					<i class="icon-cog"></i>Select Key
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu" id="selection">
