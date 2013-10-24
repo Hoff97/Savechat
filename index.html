@@ -1,13 +1,13 @@
 <html>
 	<head>
-		<title>Savechat Beta</title>
+		<title>Savechat</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-		<link rel="icon" type="image/icon" href="pics/favicon.ico" />
+		<link rel="icon" type="image/icon" href="favicon.ico" />
 		<script src="http://code.jquery.com/jquery.js"></script>
 		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
-			var keys = new Array("Testkey");
+			var keys = new Array("");
 			var name = "Unknown User";
 			var curkey = keys[0];
 			var sound;
@@ -84,7 +84,7 @@
 					if(dec.from)
 					{
 						latest = dec.from;
-						chatcontent = "<b>" + dec.from + "</b>(" + dec.time + "): " + dec.content + "<br /><br />" + chatcontent;
+						chatcontent = "<b>" + dec.from + "</b> (" + dec.time + "): " + dec.content + "<br /><br />" + chatcontent;
 					}
 				}
 				var oldcontent = document.getElementById("messages").innerHTML;
@@ -184,11 +184,12 @@
 			{
 				position:absolute;
 				top: 5%;
-				left: 10%;
+				left: 13%;
 				border: 3px double #000;
 				width: 70%;
-				height: 90%;
+				height: 85%;
 				background-color: #BDBDBD;
+				overflow:hidden;
 			}
 			#option_chat
 			{
@@ -210,8 +211,13 @@
 			#input
 			{
 				position:absolute;
-				top:96%;
-				left:10%;
+				top:93%;
+				left:13%;
+				width:70%;
+			}
+			#inp
+			{
+				width:100%;
 			}
 		</style>
 	</head>
@@ -220,10 +226,10 @@
 			<div class="alert alert-error">Please enable JavaScript to use Savechat.</div>
 		</noscript>
 		<div id="option_chat">
-			<button class="btn btn-primary" id="addKey" onclick="addKey()" type="button"><i class="icon-plus"></i> Add Key&nbsp;</button><br /><br />
+			<button class="btn btn-primary" id="addKey" onclick="addKey()" type="button"><i class="icon-plus"></i> Add Key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button><br /><br />
 			<div class="btn-group">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-cog"></i>Select Key Listening
+				<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-cog"></i>Select Key
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu" id="selection">
@@ -233,7 +239,7 @@
 		<div id="messages"></div>
 		<div id="input">
 			<form name="input" action="javascript:addMessage()">
-				<input type="input"/>
+				<input type="input" id="inp"/>
 			</form>
 		</div>
 	</body>
