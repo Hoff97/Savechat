@@ -59,7 +59,6 @@
 				message = new Message(name,message, Date.getDate()+"."+Date.getMonth()+". "+Date.getHours()+":"+Date.getMinutes());
 				var sent = sjcl.encrypt(curkey, JSON.stringify(message));
 				sent = sent.replace(new RegExp("\\+","g"),"....PLUS....");
-				
 				var req = new AjaxRequest("contact.php",function(ms){},[new Parameter("type","input"),new Parameter("content",sent)]);
 				req.send();
 			}
@@ -84,7 +83,7 @@
 					if(dec.from)
 					{
 						latest = dec.from;
-						chatcontent = dec.from + " "dec.date + " :" + dec.content + "<br /><br />" + chatcontent;
+						chatcontent = dec.from + " " + dec.date + " :" + dec.content + "<br /><br />" + chatcontent;
 					}
 				}
 				var oldcontent = document.getElementById("messages").innerHTML;
