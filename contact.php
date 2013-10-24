@@ -1,20 +1,19 @@
 <?php
+	$connect = mysql_connect('localhost', 'root', 'Jan2008');
+	mysql_select_db("savechat", $connect);
+	
+	$date = (new DateTime())->sub(new DateInterval('P2D'));
+	$date = $date->format('YmdHis');
+	$sql = "DELETE FROM `messages` WHERE `date` < ".$date;
+	mysql_query($sql,$connect);
+
 	if($_POST["type"]=="input")
 	{
-		$content = file_get_contents("data.txt");
-		if($content!="")
-		{
-			file_put_contents("data.txt", $content."||||NEXT||||".$_POST["content"]);
-		}
-		else
-		{
-			file_put_contents("data.txt", $_POST["content"]);
-		}
+		$sql = "INSERT INTO messages (`content` ,`date`) VALUES ('" . $_POST["content"] . "',CURRENT_TIMESTAMP)";
+		mysql_query($sql,$connect);
 	}
 	else if($_POST["type"]=="output")
 	{
-		/*$connect = mysql_connect('localhost', 'root', 'Jan2008');
-		mysql_select_db("savechat", $connect);
 		$query = "SELECT * FROM messages";
 		$result = mysql_query($query,$connect);
 		
@@ -27,7 +26,6 @@
 			}
 			echo $row["content"];
 			$a++;
-		}*/
-		echo file_get_contents("data.txt");
+		}
 	}
 ?>
