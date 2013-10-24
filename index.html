@@ -56,7 +56,7 @@
 			{
 				var message = $("input").val();
 				$("input").val("");
-				message = new Message(name,message);
+				message = new Message(name,message, Date.getDate()+"."+Date.getMonth()+". "+Date.getHours()+":"+Date.getMinutes());
 				var sent = sjcl.encrypt(curkey, JSON.stringify(message));
 				sent = sent.replace(new RegExp("\\+","g"),"....PLUS....");
 				
@@ -84,7 +84,7 @@
 					if(dec.from)
 					{
 						latest = dec.from;
-						chatcontent = dec.from + ": " + dec.content + "<br /><br />" + chatcontent;
+						chatcontent = dec.from + " "dec.date + " :" + dec.content + "<br /><br />" + chatcontent;
 					}
 				}
 				var oldcontent = document.getElementById("messages").innerHTML;
@@ -98,10 +98,11 @@
 				req.send();
 			}
 			
-			function Message(from, content)
+			function Message(from, content,time)
 			{
 				this.from = from;
 				this.content = content;
+				this.time = time;
 			}
 			
 			function generateKey(length)
