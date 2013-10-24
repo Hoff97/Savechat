@@ -2,7 +2,7 @@
 	$connect = mysql_connect('localhost', 'root', 'Jan2008');
 	mysql_select_db("savechat", $connect);
 	
-	$date = (new DateTime())->sub(new DateInterval('P2D'));
+	$date = (new DateTime())->sub(new DateInterval('P1D'));
 	$date = $date->format('YmdHis');
 	$sql = "DELETE FROM `messages` WHERE `date` < ".$date;
 	mysql_query($sql,$connect);
