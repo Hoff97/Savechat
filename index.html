@@ -7,26 +7,53 @@
 		<script src="http://code.jquery.com/jquery.js"></script>
 		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
-			var keys = new Array();
+			var keys = new Array("Testkey");
 			var name = "Unknown User";
+			var curkey = keys[0];
 			function test()
 			{	
 				name = prompt("Name?","");
+				
+				updateSelection();
+				
 				var req = new AjaxRequest("contact.php", updateContent, [new Parameter("type","output")]);
 				req.send();
+			}
+			
+			function updateSelection()
+			{
+				var content = "";
+				for(var a = 0; a<keys.length; a++)
+				{
+					if(keys[a]!=curkey)
+					{
+						content += "<li><a href=\"javascript:setCurrent(" + a + ")\">" + keys[a] + "</a></li>";
+					}
+					else
+					{
+						content += "<li class='active'><a href=\"javascript:setCurrent(" + a + ")\">" + keys[a] + "</a></li>";
+					}
+				}
+				document.getElementById("selection").innerHTML = content;
+			}
+			
+			function setCurrent(key)
+			{
+				curkey = keys[key];
+				updateSelection();
 			}
 			
 			function addKey()
 			{
 				keys.push(prompt("Key",""));
+				updateSelection();
 			}
 			function addMessage()
 			{
-				var key = prompt("Key","");
-				var message = prompt("Message","");
-				
+				var message = $("input").val();
+				$("input").val("");
 				message = new Message(name,message);
-				var sent = sjcl.encrypt(key, JSON.stringify(message));
+				var sent = sjcl.encrypt(curkey, JSON.stringify(message));
 				sent = sent.replace(new RegExp("\\+","g"),"....PLUS....");
 				
 				var req = new AjaxRequest("contact.php",function(ms){},[new Parameter("type","input"),new Parameter("content",sent)]);
@@ -41,20 +68,17 @@
 				var chatcontent = "";
 				for(var a = 0; a<list.length; a++)
 				{
-					for(var b = 0; b<keys.length; b++)
+					var dec = "";
+					try
 					{
-						var dec = "";
-						try
-						{
-							dec = JSON.parse(sjcl.decrypt(keys[b], list[a]));
-						}
-						catch(e)
-						{
-						}
-						if(dec.from)
-						{
-							chatcontent = dec.from + ": " + dec.content + "<br /><br />" + chatcontent;
-						}
+						dec = JSON.parse(sjcl.decrypt(curkey, list[a]));
+					}
+					catch(e)
+					{
+					}
+					if(dec.from)
+					{
+						chatcontent = dec.from + ": " + dec.content + "<br /><br />" + chatcontent;
 					}
 				}
 				document.getElementById("messages").innerHTML = chatcontent;
@@ -170,6 +194,12 @@
 			{
 				background-color: #BDBDBD;
 			}
+			#input
+			{
+				position:absolute;
+				top:96%;
+				left:10%;
+			}
 		</style>
 	</head>
 	<body onload="test()" id="background">
@@ -177,16 +207,15 @@
 			<div class="alert alert-error">Please enable JavaScript to use Savechat.</div>
 		</noscript>
 		<div id="option_chat">
-				<button class="btn btn-primary" id="addKey" onclick="addKey()" type="button"><i class="icon-plus"></i> Add Key&nbsp;</button><br /><br />
-				<div class="btn-group">
-					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						Select Key
-						<span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<li class="btn-primary">1</li>
-					</ul>
-				</div>
+			<button class="btn btn-primary" id="addKey" onclick="addKey()" type="button"><i class="icon-plus"></i> Add Key&nbsp;</button><br /><br />
+			<div class="btn-group">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					Select Key
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" id="selection">
+				</ul>
+			</div>
 		</div>
 		<div id="messages"></div>
 		<div id="input">
