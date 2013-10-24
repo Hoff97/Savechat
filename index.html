@@ -7,6 +7,10 @@
 		<script src="http://code.jquery.com/jquery.js"></script>
 		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
+			/*
+				ToDo von Hefeteig:
+					- Tabs mit Nachrichtenanzeige
+			*/
 			var keys = new Array("");
 			var name = "Unknown User";
 			var curkey = keys[0];
@@ -14,6 +18,8 @@
 			var message = false;
 			function test()
 			{	
+				inp.focus();
+				
 				name = prompt("Name?","");
 				
 				sound = new Audio("sound.mp3");
