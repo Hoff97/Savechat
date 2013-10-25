@@ -12,6 +12,7 @@
 			var curkey = keys[0];
 			var sound;
 			var message = false;
+			var online;
 			function test()
 			{	
 				name = prompt("Name?","");
@@ -23,6 +24,9 @@
 				
 				var req = new AjaxRequest("contact.php", updateContent, [new Parameter("type","output")]);
 				req.send();
+				
+				var req2 = new AjaxRequest("online.php", updateOnline, [new Parameter("name",name)]);
+				req2.send();
 			}
 			
 			function updateSelection()
@@ -96,9 +100,33 @@
 					sound.play();
 				}
 				message = true;
+				
+				window.setTimeout(sendUpdate,500);
+			}		
+			function sendUpdate()
+			{
 				var req = new AjaxRequest("contact.php", updateContent, [new Parameter("type","output")]);
 				req.send();
 			}
+			
+			function updateOnline(response)
+			{
+				online = JSON.parse(response.responseText);
+				var onlinelist = "";
+				for(var a = 0; a<online.length; a++)
+				{
+					onlinelist += "<div class='name'>" + online[a].name + "</div>";
+				}
+				$("#list").html(onlinelist);
+				window.setTimeout(sendOnline,10000);
+			}
+			function sendOnline()
+			{
+				var req2 = new AjaxRequest("online.php", updateOnline, [new Parameter("name",name)]);
+				req2.send();
+			}
+			
+			
 			
 			function Message(from, content, time)
 			{
@@ -221,6 +249,44 @@
 			{
 				width:100%;
 			}
+			#online
+			{
+				position:absolute;
+				top:5%;
+				left:87%;
+				width:10%;
+				height:85%;
+				border: 3px double #000;
+				background-color: #BDBDBD;
+				overflow:auto;			
+			}
+			#onlineheader
+			{
+				position:absolute;
+				top:0%;
+				left:0%;
+				width:100%;
+				height:22px;
+				background-color:#000;
+				font-size:20px;
+				text-align:center;
+				color:#FFF;
+			}
+			#list
+			{
+				position:absolute;
+				top:22px;
+				left:0%;
+				width:100%;
+			}
+			.name
+			{
+				position:relative;
+				width:99%;
+				height:20px;
+				text-align:center;
+				background-color:#CDCDCD;
+			}
 		</style>
 	</head>
 	<body onload="test()">
@@ -243,6 +309,12 @@
 			<form name="input" action="javascript:addMessage()">
 				<input type="input" id="inp"/>
 			</form>
+		</div>
+		<div id="online">
+			<div id="onlineheader">People Online</div>
+			<div id="list">
+				
+			</div>
 		</div>
 	</body>
 </html>
