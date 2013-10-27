@@ -2,7 +2,8 @@
 	$connect = mysql_connect('localhost', 'root', 'Jan2008');
 	mysql_select_db("savechat", $connect);
 	
-	$date = (new DateTime())->sub(new DateInterval("PT30S"));
+	$date = new DateTime();
+	$date = $date->sub(new DateInterval("PT30S"));
 	$date = $date->format('YmdHis');
 	$sql = "DELETE FROM `online` WHERE `date` < ".$date;
 	mysql_query($sql,$connect);
