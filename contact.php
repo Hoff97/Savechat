@@ -28,4 +28,11 @@
 			$a++;
 		}
 	}
+	else if($_POST["type"]=="delete")
+	{
+		$date = (new DateTime())->sub(new DateInterval('PT5M'));
+		$date = $date->format('YmdHis');
+		$sql = "DELETE FROM `messages` WHERE `date` < ".$date;
+		mysql_query($sql,$connect);
+	}
 ?>

@@ -126,6 +126,11 @@
 				req2.send();
 			}
 			
+			function deletechat()
+			{
+				var req = new AjaxRequest("contact.php", function(){alert("Content deleted");}, [new Parameter("type","delete")]);
+				req.send();
+			}
 			
 			
 			function Message(from, content, time)
@@ -302,7 +307,8 @@
 				</a>
 				<ul class="dropdown-menu" id="selection">
 				</ul>
-			</div>
+			</div><br /><br />
+			<button class="btn btn-primary" id="delete" onclick="deletechat()" type="button"><i class="icon-remove"></i> L&ouml;schen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
 		</div>
 		<div id="messages"></div>
 		<div id="input">
