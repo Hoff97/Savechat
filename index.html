@@ -15,6 +15,7 @@
 			function test()
 			{	
 				name = prompt("Name?","");
+				name = name.replace(/<b\<h\<i\<u\<script\/g, ' ');
 				
 				sound = new Audio("sound.mp3");
 				
@@ -55,6 +56,7 @@
 			function addMessage()
 			{
 				var message = $("input").val();
+				message = message.replace(/<b\<h\<i\<u\<script\/g, ' ');
 				$("input").val("");
 				var d = new Date();
 				message = new Message(name,message, d.getDate()+"."+d.getMonth()+". "+d.getHours()+":"+d.getMinutes());
